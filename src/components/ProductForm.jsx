@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import QRCodeScanner from "./QRCodeScanner";
 import "./ProductForm.css";
 
@@ -7,7 +8,7 @@ const ProductForm = ({ onAddItem }) => {
   const [quantity, setQuantity] = useState("");
   const [cart, setCart] = useState([]);
 
-  const phoneNumber = "5554994057272";
+  const phoneNumber = "5554999999999";
 
   const handleAdd = () => {
     if (code && quantity) {
@@ -65,6 +66,9 @@ const ProductForm = ({ onAddItem }) => {
           <i className="fab fa-whatsapp"></i> Enviar para WhatsApp
         </button>
       </div>
+      <Link to="/contributors">
+        <button className="btn">Integrantes</button>
+      </Link>
     </div>
   );
 };
