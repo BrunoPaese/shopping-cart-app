@@ -1,13 +1,19 @@
 import React, { useState } from "react";
-import QRCodeScanner from "./teste";
+import QRCodeScanner from "./QRCodeScanner";
+import "./ProductForm.css";
 
 const ProductForm = ({ onAddItem }) => {
   const [code, setCode] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [cart, setCart] = useState([]);
+
+  const phoneNumber = "5554994057272";
 
   const handleAdd = () => {
     if (code && quantity) {
-      onAddItem({ code, quantity: parseInt(quantity, 10) });
+      const newItem = { code, quantity: parseInt(quantity, 10) };
+      setCart([...cart, newItem]);
+      onAddItem(newItem);
       setCode("");
       setQuantity("");
     } else {
@@ -15,18 +21,35 @@ const ProductForm = ({ onAddItem }) => {
     }
   };
 
+  const handleSendToWhatsApp = () => {
+    if (cart.length === 0) {
+      alert("O carrinho está vazio!");
+      return;
+    }
+
+    const message = cart
+      .map((item, index) => `${index + 1}. Código: ${item.code}, Quantidade: ${item.quantity}`)
+      .join("\n");
+
+    const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+      `Itens do Carrinho:\n${message}`
+    )}`;
+
+    window.open(whatsappLink, "_blank");
+  };
+
   return (
-    <div>
-      <div>
+    <div className="product-form">
+      <div className="input-group">
         <label>Código do Produto:</label>
         <input
-          type="text"
+          type="number"
           value={code}
           onChange={(e) => setCode(e.target.value)}
         />
         <QRCodeScanner onScan={(scannedCode) => setCode(scannedCode)} />
       </div>
-      <div>
+      <div className="input-group">
         <label>Quantidade:</label>
         <input
           type="number"
@@ -34,7 +57,14 @@ const ProductForm = ({ onAddItem }) => {
           onChange={(e) => setQuantity(e.target.value)}
         />
       </div>
-      <button onClick={handleAdd}>Adicionar ao Carrinho</button>
+      <div className="button-group">
+        <button onClick={handleAdd} className="btn">
+          <i className="fas fa-cart-plus"></i> Adicionar ao Carrinho
+        </button>
+        <button onClick={handleSendToWhatsApp} className="btn whatsapp-btn">
+          <i className="fab fa-whatsapp"></i> Enviar para WhatsApp
+        </button>
+      </div>
     </div>
   );
 };
